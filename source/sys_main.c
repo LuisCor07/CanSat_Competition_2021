@@ -98,8 +98,6 @@ int main(void)
     vTaskStartScheduler();
     while(1);
 /* USER CODE END */
-
-//    return 0;
 }
 
 
@@ -138,10 +136,8 @@ void vTelemetry(void *pvParameters)
             __delay_cycles(106);
         }
 
-
         createTelemetryPacket();
         sciSendData(buff_size, command, 0);
-        //memset(command, 0, sizeof(COMM_SIZE));
 
         PACKET_COUNT++;
         SP1_PC++;

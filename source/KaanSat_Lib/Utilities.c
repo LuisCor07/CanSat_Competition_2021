@@ -58,7 +58,7 @@ char cSP2_PC[6] = "P2";
 float ALTITUDE_BAR = 0.0;
 char cALTITUDE_BAR[8] = "h";
 
-float PRESS_BAR = 1.0;
+float PRESS_BAR = 999999.0;
 char cPRESS_BAR[8] = "PR";
 
 float TEMPERATURE = 0.0;
@@ -93,7 +93,7 @@ bool telemetry_ON = false;
 bool SP_ON = 0;
 /* ------------ TELEMETRY FORMAT -------------------*/
 //static const char* FORMAT = "1714,%s,C,%c,%c,%c,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s;1714,";
-static const char* CONT_FORMAT = "%s,%s,%s,%s,%s,%s,%s,%s;";
+static const char* CONT_FORMAT = "%s,%s,%s,%s,%s,%s,%s,%s,%s;";
 
 /* ------------------ FUNCTIONS --------------------*/
 void createTelemetryPacket()
@@ -121,7 +121,7 @@ void createTelemetryPacket()
                         /* <GPS_LONGITUDE> */
                         /* <GPS_ALTITUDE> */
                         /* <GPS_SATS> */
-                        //FSW_STATE[STATE],               /* <SOFTWARE_STATE> */
+                        FSW_STATE[STATE],               /* <SOFTWARE_STATE> */
                         //cSP1_PC,                        /* <SP1_PACKET_COUNT> */
                         //cSP2_PC,                        /* <SP2_PACKET_COUNT> */
                         /* <CMD_ECHO> */
@@ -138,6 +138,11 @@ void createTelemetryPacket()
 //                        SP2_TEMPERATURE,                /* <TEMP> */
 //                        SP2_ROTATION_RATE               /* <SP_ROTATION_RATE> */
                         );
+}
+
+float getAltitude(float pressure)
+{
+    return (pow((pressure/P_ISA),(1/5.2559)) - 1)/(-1*0.0000225577);
 }
 
 bool sciSendData(uint32 numOfDat, char* charDat, bool CR)

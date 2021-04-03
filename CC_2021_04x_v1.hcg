@@ -35,7 +35,7 @@
         <PATH>include\htu.h</PATH>
       </HDRHTU>
       <SRCHET>
-        <PATH/>
+        <PATH>source\het.c</PATH>
       </SRCHET>
     </FILENAMES>
   </HET>
@@ -335,7 +335,9 @@
       <HDRHTU>
         <NAME>htu.h</NAME>
       </HDRHTU>
-      <SRCHET/>
+      <SRCHET>
+        <NAME>het.c</NAME>
+      </SRCHET>
       <HDRESM_R>
         <NAME>reg_esm.h</NAME>
       </HDRESM_R>

@@ -52,6 +52,7 @@
 /*------------- KA'AN SAT Libraries -----------------*/
 #include "KaanSat_Lib/Utilities.h"
 #include "KaanSat_Lib/Commands.h"
+#include "KaanSat_Lib/PWM.h"
 /* USER CODE END */
 
 /* Include Files */
@@ -80,6 +81,7 @@ int main(void)
 /* USER CODE BEGIN (3) */
 
     gioInit();
+    hetInit();
 
     /* ---------------- SCI CONFIG----------------*/
     sciInit();
@@ -90,14 +92,17 @@ int main(void)
     /* --------------- READ SD STATE --------------*/
 
     /* --------------- CREATE TASK --------------*/
+    xTaskCreate(vMissionOperations,"Sat Ops",configMINIMAL_STACK_SIZE, NULL, 1, &xWTStartHandle);
+    xTaskCreate(vSensors,"Sensores",configMINIMAL_STACK_SIZE, NULL, 1, &xWTStartHandle);
     xTaskCreate(vTelemetry,"T. Container",512, NULL, 1, &xTelemetryHandle);
     xTaskCreate(vWaitToStart,"W.To S.",configMINIMAL_STACK_SIZE, NULL, 1, &xWTStartHandle);
-    xTaskCreate(vSensors,"Sensores",configMINIMAL_STACK_SIZE, NULL, 1, &xWTStartHandle);
 
     vTaskSuspend(xTelemetryHandle);
     vTaskStartScheduler();
     while(1);
 /* USER CODE END */
+
+//    return 0;
 }
 
 
@@ -125,6 +130,7 @@ void vTelemetry(void *pvParameters)
 {
     portTickType xTelemetryTime;
     xTelemetryTime = xTaskGetTickCount();
+    STATE = LAUNCH;
 
     while(1)
     {
@@ -143,7 +149,7 @@ void vTelemetry(void *pvParameters)
         SP1_PC++;
         SP2_PC++;
 
-        vTaskDelayUntil(&xTelemetryTime, T_TELEMETRY/portTICK_RATE_MS);
+        vTaskDelayUntil(&xTelemetryTime, T_TELEMETRY);
     }
 }
 
@@ -153,8 +159,60 @@ void vSensors(void *pvParameters)
     xSensorsTime = xTaskGetTickCount();
     while(1)
     {
-        ALTITUDE_BAR = (pow((PRESS_BAR/P_ISA),(1/5.2559)) - 1)/(-1*0.0000225577);
-        vTaskDelayUntil(&xSensorsTime, T_SENSORS/portTICK_RATE_MS);
+        ALTITUDE_BAR = getAltitude(PRESS_BAR);
+        vTaskDelayUntil(&xSensorsTime, T_SENSORS);
+    }
+}
+
+void vMissionOperations(void *pvParameters)
+{
+    portTickType xOpsTime;
+    xOpsTime = xTaskGetTickCount();
+
+    SERVO_PAYLOAD.period = 20000;
+    int angles[3] = {SPOS_ZERO, SPOS_SP1, SPOS_SP2};
+    SERVO_PAYLOAD.duty = angles[0];
+
+    int i = 0;
+    uint8 land = 0;
+    float ALTITUDE_STATES[4] = {1798.0, 1750.0, 1700.0, 1660.0};
+
+//    for(i=0 ; i<10; i++)
+//    {
+//        ALTITUDE_INIT = ALTITUDE_INIT + PRESS_BAR;
+//        vTaskDelayUntil(&xOpsTime, T_TELEMETRY);
+//    }
+//
+//    ALTITUDE_INIT = getAltitude(ALTITUDE_INIT/10);
+
+    i = 0;
+    while(1)
+    {
+        switch(STATE)
+        {
+            case SP1_RELEASE:
+                SERVO_PAYLOAD.duty = angles[1];
+                break;
+            case SP2_RELEASE:
+                SERVO_PAYLOAD.duty = angles[2];
+                break;
+            default:
+                SERVO_PAYLOAD.duty = angles[0];
+                break;
+        }
+        if(land == 0 && (ALTITUDE_BAR >= ALTITUDE_STATES[i]))
+        {
+            land = 1;
+            i++;
+            STATE = i+1;
+        }
+        if(land == 1 && (ALTITUDE_BAR <= ALTITUDE_STATES[i]))
+        {
+            i++;
+            STATE = i+1;
+        }
+        pwmSetSignal10e3(hetRAM1, PWM_PAYLOAD, SERVO_PAYLOAD);
+        vTaskDelayUntil(&xOpsTime, T_OPERATIONS);
     }
 }
 

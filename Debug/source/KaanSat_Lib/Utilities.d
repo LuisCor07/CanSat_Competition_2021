@@ -28,6 +28,9 @@ source/KaanSat_Lib/Utilities.obj: C:/ti/ccs930/ccs/tools/compiler/ti-cgt-arm_18.
 source/KaanSat_Lib/Utilities.obj: C:/Users/ADMIN/workspace_v9/CC_2021_04x_v1/include/sci.h
 source/KaanSat_Lib/Utilities.obj: C:/Users/ADMIN/workspace_v9/CC_2021_04x_v1/include/reg_sci.h
 source/KaanSat_Lib/Utilities.obj: C:/Users/ADMIN/workspace_v9/CC_2021_04x_v1/include/reg_gio.h
+source/KaanSat_Lib/Utilities.obj: C:/Users/ADMIN/workspace_v9/CC_2021_04x_v1/include/het.h
+source/KaanSat_Lib/Utilities.obj: C:/Users/ADMIN/workspace_v9/CC_2021_04x_v1/include/reg_het.h
+source/KaanSat_Lib/Utilities.obj: C:/ti/ccs930/ccs/tools/compiler/ti-cgt-arm_18.12.4.LTS/include/string.h
 source/KaanSat_Lib/Utilities.obj: C:/ti/ccs930/ccs/tools/compiler/ti-cgt-arm_18.12.4.LTS/include/stdio.h
 source/KaanSat_Lib/Utilities.obj: C:/ti/ccs930/ccs/tools/compiler/ti-cgt-arm_18.12.4.LTS/include/stdarg.h
 source/KaanSat_Lib/Utilities.obj: C:/ti/ccs930/ccs/tools/compiler/ti-cgt-arm_18.12.4.LTS/include/stdlib.h
@@ -35,7 +38,6 @@ source/KaanSat_Lib/Utilities.obj: C:/ti/ccs930/ccs/tools/compiler/ti-cgt-arm_18.
 source/KaanSat_Lib/Utilities.obj: C:/ti/ccs930/ccs/tools/compiler/ti-cgt-arm_18.12.4.LTS/include/_defs.h
 source/KaanSat_Lib/Utilities.obj: C:/ti/ccs930/ccs/tools/compiler/ti-cgt-arm_18.12.4.LTS/include/machine/_limits.h
 source/KaanSat_Lib/Utilities.obj: C:/ti/ccs930/ccs/tools/compiler/ti-cgt-arm_18.12.4.LTS/include/strings.h
-source/KaanSat_Lib/Utilities.obj: C:/ti/ccs930/ccs/tools/compiler/ti-cgt-arm_18.12.4.LTS/include/string.h
 
 ../source/KaanSat_Lib/Utilities.c: 
 C:/Users/ADMIN/workspace_v9/CC_2021_04x_v1/include/KaanSat_Lib/Utilities.h: 
@@ -65,6 +67,9 @@ C:/ti/ccs930/ccs/tools/compiler/ti-cgt-arm_18.12.4.LTS/include/stdbool.h:
 C:/Users/ADMIN/workspace_v9/CC_2021_04x_v1/include/sci.h: 
 C:/Users/ADMIN/workspace_v9/CC_2021_04x_v1/include/reg_sci.h: 
 C:/Users/ADMIN/workspace_v9/CC_2021_04x_v1/include/reg_gio.h: 
+C:/Users/ADMIN/workspace_v9/CC_2021_04x_v1/include/het.h: 
+C:/Users/ADMIN/workspace_v9/CC_2021_04x_v1/include/reg_het.h: 
+C:/ti/ccs930/ccs/tools/compiler/ti-cgt-arm_18.12.4.LTS/include/string.h: 
 C:/ti/ccs930/ccs/tools/compiler/ti-cgt-arm_18.12.4.LTS/include/stdio.h: 
 C:/ti/ccs930/ccs/tools/compiler/ti-cgt-arm_18.12.4.LTS/include/stdarg.h: 
 C:/ti/ccs930/ccs/tools/compiler/ti-cgt-arm_18.12.4.LTS/include/stdlib.h: 
@@ -72,4 +77,3 @@ C:/ti/ccs930/ccs/tools/compiler/ti-cgt-arm_18.12.4.LTS/include/math.h:
 C:/ti/ccs930/ccs/tools/compiler/ti-cgt-arm_18.12.4.LTS/include/_defs.h: 
 C:/ti/ccs930/ccs/tools/compiler/ti-cgt-arm_18.12.4.LTS/include/machine/_limits.h: 
 C:/ti/ccs930/ccs/tools/compiler/ti-cgt-arm_18.12.4.LTS/include/strings.h: 
-C:/ti/ccs930/ccs/tools/compiler/ti-cgt-arm_18.12.4.LTS/include/string.h: 

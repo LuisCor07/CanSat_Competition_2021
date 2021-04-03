@@ -30,6 +30,7 @@
 #include "os_task.h"
 #include "sys_core.h"
 #include "sci.h"
+#include "het.h"
 #include "stdio.h"
 #include "stdlib.h"
 #include "math.h"
@@ -37,8 +38,9 @@
 
 /* ------------------- DECLARATIONS ------------------*/
 #define COMM_SIZE       2048
-#define T_TELEMETRY     1000
-#define T_SENSORS       1000
+#define T_TELEMETRY     1000/portTICK_RATE_MS
+#define T_SENSORS       1000/portTICK_RATE_MS
+#define T_OPERATIONS    2000/portTICK_RATE_MS
 #define LONG_CMD_KEY    15
 #define LONG_SP_PARAM   4
 #define TEAM_NUMBER     "1714"
@@ -47,6 +49,15 @@
 
 #define R_air           20.97
 #define P_ISA           101325.0
+
+#define PWM_PAYLOAD     pwm0
+#define PWM_CAMERA      pwm1
+#define SPOS_ZERO      250
+#define SPOS_SP1       505
+#define SPOS_SP2       750
+
+hetSIGNAL_t SERVO_PAYLOAD;
+hetSIGNAL_t SERVO_CAMERA;
 
 enum STATES
 {
@@ -57,11 +68,13 @@ enum CANSAT
 {
     CONTAINER, PAYLOAD
 };
+
 /*------------------ TASKS -------------------------*/
 
 void vWaitToStart(void *pvParameters);
 void vTelemetry(void *pvParameters);
 void vSensors(void *pvParameters);
+void vMissionOperations(void *pvParameters);
 
 xTaskHandle xWTStartHandle;
 xTaskHandle xTelemetryHandle;
@@ -136,6 +149,9 @@ extern bool SP_ON;
 
 void createTelemetryPacket();
 bool sciSendData(uint32 numOfDat, char* charDat, bool CR);
+
+float getAltitude(float pressure);
+
 static void reverse(char *s, size_t s_len);
 size_t sltoa(char *s, long int n);
 void ftoa(float n, char *res, int afterpoint);

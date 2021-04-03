@@ -43,7 +43,7 @@
 
 
 /* USER CODE BEGIN (0) */
-// Enrique, te aprecio
+// Westlern mania
 /*----------------- OS Libraries --------------------*/
 #include "FreeRTOS.h"
 #include "os_task.h"

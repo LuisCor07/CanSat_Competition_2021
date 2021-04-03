@@ -43,7 +43,7 @@
 
 
 /* USER CODE BEGIN (0) */
-// Enrique, saca pelos
+// Enrique, te aprecio
 /*----------------- OS Libraries --------------------*/
 #include "FreeRTOS.h"
 #include "os_task.h"

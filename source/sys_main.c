@@ -44,6 +44,7 @@
 
 /* USER CODE BEGIN (0) */
 // Westlern mania
+// HOLA
 /*----------------- OS Libraries --------------------*/
 #include "FreeRTOS.h"
 #include "os_task.h"
@@ -80,7 +81,7 @@ void sciNotification(sciBASE_t *sci, unsigned flags);
 int main(void)
 {
 /* USER CODE BEGIN (3) */
-
+    //INICIALIZACIONES
     gioInit();
     hetInit();
 

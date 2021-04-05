@@ -44,6 +44,7 @@
 
 /* USER CODE BEGIN (0) */
 // Westlern mania
+// Hola, soy Karla
 /*----------------- OS Libraries --------------------*/
 #include "FreeRTOS.h"
 #include "os_task.h"

@@ -17,6 +17,7 @@ ASM_SRCS += \
 ../source/sys_pmu.asm 
 
 C_SRCS += \
+../source/adc.c \
 ../source/errata_SSWF021_45.c \
 ../source/esm.c \
 ../source/gio.c \
@@ -42,6 +43,7 @@ C_SRCS += \
 ../source/system.c 
 
 C_DEPS += \
+./source/adc.d \
 ./source/errata_SSWF021_45.d \
 ./source/esm.d \
 ./source/gio.d \
@@ -67,6 +69,7 @@ C_DEPS += \
 ./source/system.d 
 
 OBJS += \
+./source/adc.obj \
 ./source/dabort.obj \
 ./source/errata_SSWF021_45.obj \
 ./source/esm.obj \
@@ -106,6 +109,7 @@ ASM_DEPS += \
 ./source/sys_pmu.d 
 
 OBJS__QUOTED += \
+"source\adc.obj" \
 "source\dabort.obj" \
 "source\errata_SSWF021_45.obj" \
 "source\esm.obj" \
@@ -137,6 +141,7 @@ OBJS__QUOTED += \
 "source\system.obj" 
 
 C_DEPS__QUOTED += \
+"source\adc.d" \
 "source\errata_SSWF021_45.d" \
 "source\esm.d" \
 "source\gio.d" \
@@ -169,15 +174,8 @@ ASM_DEPS__QUOTED += \
 "source\sys_mpu.d" \
 "source\sys_pmu.d" 
 
-ASM_SRCS__QUOTED += \
-"../source/dabort.asm" \
-"../source/os_portasm.asm" \
-"../source/sys_core.asm" \
-"../source/sys_intvecs.asm" \
-"../source/sys_mpu.asm" \
-"../source/sys_pmu.asm" 
-
 C_SRCS__QUOTED += \
+"../source/adc.c" \
 "../source/errata_SSWF021_45.c" \
 "../source/esm.c" \
 "../source/gio.c" \
@@ -201,5 +199,13 @@ C_SRCS__QUOTED += \
 "../source/sys_startup.c" \
 "../source/sys_vim.c" \
 "../source/system.c" 
+
+ASM_SRCS__QUOTED += \
+"../source/dabort.asm" \
+"../source/os_portasm.asm" \
+"../source/sys_core.asm" \
+"../source/sys_intvecs.asm" \
+"../source/sys_mpu.asm" \
+"../source/sys_pmu.asm" 
 
 

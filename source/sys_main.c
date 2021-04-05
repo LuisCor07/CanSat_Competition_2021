@@ -43,7 +43,6 @@
 
 
 /* USER CODE BEGIN (0) */
-// Enrique, te aprecio
 /*----------------- OS Libraries --------------------*/
 #include "FreeRTOS.h"
 #include "os_task.h"
@@ -83,6 +82,7 @@ int main(void)
 
     gioInit();
     hetInit();
+    adcInit();
 
     /* ---------------- SCI CONFIG----------------*/
     sciInit();
@@ -103,7 +103,7 @@ int main(void)
     while(1);
 /* USER CODE END */
 
-//    return 0;
+    return 0;
 }
 
 
@@ -158,9 +158,11 @@ void vSensors(void *pvParameters)
 {
     portTickType xSensorsTime;
     xSensorsTime = xTaskGetTickCount();
+
     while(1)
     {
         ALTITUDE_BAR = getAltitude(PRESS_BAR);
+
         vTaskDelayUntil(&xSensorsTime, T_SENSORS);
     }
 }

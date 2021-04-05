@@ -32,6 +32,8 @@ source/sys_main.obj: C:/Users/ADMIN/workspace_v9/CC_2021_04x_v1/include/KaanSat_
 source/sys_main.obj: C:/Users/ADMIN/workspace_v9/CC_2021_04x_v1/include/het.h
 source/sys_main.obj: C:/Users/ADMIN/workspace_v9/CC_2021_04x_v1/include/reg_het.h
 source/sys_main.obj: C:/ti/ccs930/ccs/tools/compiler/ti-cgt-arm_18.12.4.LTS/include/string.h
+source/sys_main.obj: C:/Users/ADMIN/workspace_v9/CC_2021_04x_v1/include/adc.h
+source/sys_main.obj: C:/Users/ADMIN/workspace_v9/CC_2021_04x_v1/include/reg_adc.h
 source/sys_main.obj: C:/ti/ccs930/ccs/tools/compiler/ti-cgt-arm_18.12.4.LTS/include/stdio.h
 source/sys_main.obj: C:/ti/ccs930/ccs/tools/compiler/ti-cgt-arm_18.12.4.LTS/include/stdarg.h
 source/sys_main.obj: C:/ti/ccs930/ccs/tools/compiler/ti-cgt-arm_18.12.4.LTS/include/stdlib.h
@@ -76,6 +78,8 @@ C:/Users/ADMIN/workspace_v9/CC_2021_04x_v1/include/KaanSat_Lib/Utilities.h:
 C:/Users/ADMIN/workspace_v9/CC_2021_04x_v1/include/het.h: 
 C:/Users/ADMIN/workspace_v9/CC_2021_04x_v1/include/reg_het.h: 
 C:/ti/ccs930/ccs/tools/compiler/ti-cgt-arm_18.12.4.LTS/include/string.h: 
+C:/Users/ADMIN/workspace_v9/CC_2021_04x_v1/include/adc.h: 
+C:/Users/ADMIN/workspace_v9/CC_2021_04x_v1/include/reg_adc.h: 
 C:/ti/ccs930/ccs/tools/compiler/ti-cgt-arm_18.12.4.LTS/include/stdio.h: 
 C:/ti/ccs930/ccs/tools/compiler/ti-cgt-arm_18.12.4.LTS/include/stdarg.h: 
 C:/ti/ccs930/ccs/tools/compiler/ti-cgt-arm_18.12.4.LTS/include/stdlib.h: 

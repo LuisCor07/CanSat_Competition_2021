@@ -31,6 +31,7 @@
 #include "sys_core.h"
 #include "sci.h"
 #include "het.h"
+#include "adc.h"
 #include "stdio.h"
 #include "stdlib.h"
 #include "math.h"
@@ -47,8 +48,10 @@
 
 #define spiREGCS        spiREG4
 
-#define R_air           20.97
-#define P_ISA           101325.0
+#define P0              760         //   mmHg
+#define Rair            8.31432     //   N.m/(mol.K)
+#define ug              0.2841408   //   Producto u*g donde u = 0.0289644 kg/mol; g = 9.81 m/s^2
+#define T               25          //   °C ; TODO: Agregar sensor de temperatura
 
 #define PWM_PAYLOAD     pwm0
 #define PWM_CAMERA      pwm1
@@ -150,7 +153,7 @@ extern bool SP_ON;
 void createTelemetryPacket();
 bool sciSendData(uint32 numOfDat, char* charDat, bool CR);
 
-float getAltitude(float pressure);
+float getAltitude(float P);
 
 static void reverse(char *s, size_t s_len);
 size_t sltoa(char *s, long int n);

@@ -114,7 +114,7 @@ void createTelemetryPacket()
                         //SP1_RELEASED,               /* <SP1_RELEASED> */
                         //SP2_RELEASED,               /* <SP2_RELEASED> */
                         cALTITUDE_BAR,              /* <ALTITUD> */
-                        //cTEMPERATURE,               /* <TEMP> */
+                        cTEMPERATURE,               /* <TEMP> */
                         /* <VOLTAGE> */
                         /* <GPS_TME> */
                         /* <GPS_LATITUDE> */
@@ -140,9 +140,9 @@ void createTelemetryPacket()
                         );
 }
 
-float getAltitude(float pressure)
+float getAltitude(float P)
 {
-    return (pow((pressure/P_ISA),(1/5.2559)) - 1)/(-1*0.0000225577);
+    return (Rair*(T*273.15)*log(P0/P))/ug;
 }
 
 bool sciSendData(uint32 numOfDat, char* charDat, bool CR)

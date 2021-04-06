@@ -48,16 +48,16 @@
 
 #define spiREGCS        spiREG4
 
-#define P0              760         //   mmHg
+#define P0              101325      //   Pa
 #define Rair            8.31432     //   N.m/(mol.K)
 #define ug              0.2841408   //   Producto u*g donde u = 0.0289644 kg/mol; g = 9.81 m/s^2
 #define T               25          //   °C ; TODO: Agregar sensor de temperatura
 
 #define PWM_PAYLOAD     pwm0
 #define PWM_CAMERA      pwm1
-#define SPOS_ZERO      250
-#define SPOS_SP1       505
-#define SPOS_SP2       750
+#define SPOS_ZERO       250
+#define SPOS_SP1        505
+#define SPOS_SP2        750
 
 hetSIGNAL_t SERVO_PAYLOAD;
 hetSIGNAL_t SERVO_CAMERA;

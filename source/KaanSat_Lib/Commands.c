@@ -16,7 +16,6 @@ int commandsTam = sizeof (commands)/sizeof (char*);
 int sim_ok = 0;
 int cmd_cont = 0;
 
-
 int getCommand(char cmd_char)
 {
     if(cmd_char != ';')
@@ -209,4 +208,3 @@ void commSIMP(char *value[])
 {
     PRESS_BAR = atof(*value);
 }
-

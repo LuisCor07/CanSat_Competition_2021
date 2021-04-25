@@ -38,7 +38,7 @@
 #include "strings.h"
 
 /* ------------------- DECLARATIONS ------------------*/
-#define COMM_SIZE       2048
+#define COMM_SIZE       100
 #define T_TELEMETRY     1000/portTICK_RATE_MS
 #define T_SENSORS       1000/portTICK_RATE_MS
 #define T_OPERATIONS    2000/portTICK_RATE_MS
@@ -58,6 +58,10 @@
 #define SPOS_ZERO       250
 #define SPOS_SP1        505
 #define SPOS_SP2        750
+
+#define DH 0x0013A200
+#define DL_ET 0x40DB0B6E
+//#define DL_ET 0x40E5421A
 
 hetSIGNAL_t SERVO_PAYLOAD;
 hetSIGNAL_t SERVO_CAMERA;
@@ -84,7 +88,9 @@ xTaskHandle xTelemetryHandle;
 
 /* -------------- VARIABLES ----------------*/
 extern char command[COMM_SIZE];
+extern char tramaAPI[COMM_SIZE];
 extern uint32 buff_size;
+extern uint32 buff_sizeAPI;
 
 extern char CMD_KEY[LONG_CMD_KEY];
 

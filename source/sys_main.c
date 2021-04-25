@@ -79,7 +79,7 @@ void sciNotification(sciBASE_t *sci, unsigned flags);
 int main(void)
 {
 /* USER CODE BEGIN (3) */
-	// HOLA
+
     gioInit();
     hetInit();
     adcInit();
@@ -95,7 +95,7 @@ int main(void)
     /* --------------- CREATE TASK --------------*/
     xTaskCreate(vMissionOperations,"Sat Ops",configMINIMAL_STACK_SIZE, NULL, 1, &xWTStartHandle);
     xTaskCreate(vSensors,"Sensores",configMINIMAL_STACK_SIZE, NULL, 1, NULL);
-    xTaskCreate(vTelemetry,"T. Container",512, NULL, 1, &xTelemetryHandle);
+    xTaskCreate(vTelemetry,"T. Container",1024, NULL, 1, &xTelemetryHandle);
     xTaskCreate(vWaitToStart,"W.To S.",configMINIMAL_STACK_SIZE, NULL, 1, &xWTStartHandle);
 
     vTaskSuspend(xTelemetryHandle);
@@ -144,7 +144,8 @@ void vTelemetry(void *pvParameters)
         }
 
         createTelemetryPacket();
-        sciSendData(buff_size, command, 0);
+        //TODO V4
+        sciSendData(buff_sizeAPI, tramaAPI, 0);
 
         PACKET_COUNT++;
         SP1_PC++;

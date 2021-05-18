@@ -42,26 +42,27 @@
 #define T_TELEMETRY     1000/portTICK_RATE_MS
 #define T_SENSORS       1000/portTICK_RATE_MS
 #define T_OPERATIONS    2000/portTICK_RATE_MS
-#define LONG_CMD_KEY    22
+#define LONG_CMD_KEY    23
 #define LONG_SP_PARAM   4
 #define TEAM_NUMBER     "1714"
 
-#define spiREGCS        spiREG4
+#define spiREG_BMP      spiREG1
+#define spiREG_SD       spiREG4
+#define spiPORT_SD      spiPORT4
 
 #define P0              101325      //   Pa
 #define Rair            8.31432     //   N.m/(mol.K)
-#define ug              0.2841408   //   Producto u*g donde u = 0.0289644 kg/mol; g = 9.81 m/s^2
-#define T               25          //   °C ; TODO: Agregar sensor de temperatura
+#define ug              0.2841408   //   Producto u*g ; [u = 0.0289644 kg/mol]*[g = 9.81 m/s^2]
 
 #define PWM_PAYLOAD     pwm0
 #define PWM_CAMERA      pwm1
-#define SPOS_ZERO       250
-#define SPOS_SP1        505
-#define SPOS_SP2        750
+#define SPOS_ZERO       250         // 0°
+#define SPOS_SP1        505         // 45°
+#define SPOS_SP2        750         // 90°
 
 #define DH 0x0013A200
-#define DL_ET 0x40E5421A
-//#define DL_ET 0x0000FFFF
+#define DL_ET 0x40DB0B6E
+//#define DL_ET 0x40E5421A
 
 hetSIGNAL_t SERVO_PAYLOAD;
 hetSIGNAL_t SERVO_CAMERA;
@@ -70,12 +71,6 @@ enum STATES
 {
     PRELAUNCH, LAUNCH, DEPLOYMENT, SP1_RELEASE, SP2_RELEASE, LANDING
 };
-
-enum CANSAT
-{
-    CONTAINER, PAYLOAD
-};
-
 /*------------------ TASKS -------------------------*/
 
 void vWaitToStart(void *pvParameters);
@@ -91,14 +86,12 @@ extern char command[COMM_SIZE];
 extern char tramaAPI[COMM_SIZE];
 extern uint32 buff_size;
 extern uint32 buff_sizeAPI;
+extern char FSW_STATE_TEMP;
 
 extern char CMD_KEY[LONG_CMD_KEY];
 
 /* -------------- TELEMETRY ----------------*/
                 /* CONTAINER */
-
-extern float MISSION_TIME;
-extern char cMISSION_TIME[6];
 
 extern int PACKET_COUNT;
 extern char cPACKET_COUNT[6];
@@ -121,6 +114,8 @@ extern char cSP2_PC[6];
 
 extern float ALTITUDE_BAR;
 extern char cALTITUDE_BAR[8];
+
+extern float ALTITUDE_INIT;
 
 extern float PRESS_BAR;
 extern char cPRESS_BAR[8];
@@ -154,20 +149,27 @@ extern char SP2_ROTATION_RATE[LONG_SP_PARAM];
 /*---------------- COMMAND VARIABLES ----------------*/
 extern bool telemetry_ON;
 extern bool SP_ON;
+extern bool SIM_ON;
 extern int ENABLE_SIM;
+extern int STATE_INDEX;
+extern bool LAND;
 extern int H, M, S;
 extern char cH[3], cM[3], cS[3];
 extern bool SP1X_ON;
 extern bool SP2X_ON;
 extern bool R1;
 extern bool R2;
+extern int sciControl;
+extern bool toggle_sim;
 /* ------------------ FUNCTIONS --------------------*/
 
 void createTelemetryPacket();
 bool sciSendData(uint32 numOfDat, char* charDat, bool CR);
 
 void getTime();
-float getAltitude(float P);
+void updateState(int State);
+void updateAltitude (portTickType xSensorsTime, float presion_u[]);
+float getAltitude(float P, float T);
 
 static void reverse(char *s, size_t s_len);
 size_t sltoa(char *s, long int n);

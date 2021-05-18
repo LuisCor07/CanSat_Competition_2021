@@ -20,10 +20,10 @@ enum
 extern int sim_ok;
 
 
-static char receivedData[20];
-static char receivedData2[20];
-static char receivedData3[20];
-static char auxReceivedData[20];
+static char receivedData[22];
+static char receivedData2[22];
+static char receivedData3[22];
+static char auxReceivedData[22];
 char *newData;
 
 char newDataCopy[10];//copia de new data

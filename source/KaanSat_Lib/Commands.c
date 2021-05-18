@@ -21,7 +21,6 @@ int VALIDA_ENTRADA=0;
 
 void getCommand(char cmd_char)
 {
-
     if(cmd_char != ';')
     {
         CMD_KEY[cmd_cont] = cmd_char;
@@ -30,7 +29,7 @@ void getCommand(char cmd_char)
     else
     {
         cmd_cont = 0;
-        if(CMD_KEY[0] == '+' || CMD_KEY[0] == '-')
+        if(CMD_KEY[0] == '+' || CMD_KEY[0] == '*')
         {
             getSPTelemetry(CMD_KEY);
         }
@@ -54,10 +53,10 @@ void getSPTelemetry(char *telemetry)
 
     if(telemetry[0] == '+')
         selectSP = 0;
-    else
+    else if(telemetry[0] == '*')
         selectSP = 1;
 
-    char *token = strtok(telemetry,",+-");
+    char *token = strtok(telemetry,",+*");
 
     for(i=0; i<6; i++)
     {
@@ -306,7 +305,7 @@ void commCX(char *value[])
 
 void commST(char *value[])
 {
-    int i;
+//    int i;
     char *time[3];
     char *token = strtok(*value,":");
 
@@ -326,14 +325,22 @@ void commSIM(char *value[])
     if(sim_ok == 0 && (!strcmp(*value,"ENABLE")))
     {
         sim_ok = 1;
+//        telemetry_ON = false;
     }
     else if(sim_ok == 1 && (!strcmp(*value,"DISABLE")))
     {
         sim_ok = 0;
+        SIM_ON = false;
+        STATE = LAUNCH;
+        updateState(STATE);
     }
     else if(sim_ok == 1 && (!strcmp(*value,"ACTIVATE")))
     {
+        toggle_sim = 1;
         sim_ok = 1;
+        SIM_ON = true;
+        STATE = LAUNCH;
+        updateState(STATE);
     }
 
 }
@@ -362,7 +369,8 @@ void commSP2X(char *value[])
 
 void commSIMP(char *value[])
 {
-    PRESS_BAR = atof(*value);
+    if(SIM_ON)
+        PRESS_BAR = atof(*value);
 }
 
 void commSPR(char *value[]){

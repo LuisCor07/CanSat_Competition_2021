@@ -45,6 +45,8 @@ source/sys_main.obj: C:/Users/ADMIN/workspace_v9/CC_2021_04x_v1/include/KaanSat_
 source/sys_main.obj: C:/Users/ADMIN/workspace_v9/CC_2021_04x_v1/include/KaanSat_Lib/PWM.h
 source/sys_main.obj: C:/Users/ADMIN/workspace_v9/CC_2021_04x_v1/include/esm.h
 source/sys_main.obj: C:/Users/ADMIN/workspace_v9/CC_2021_04x_v1/include/reg_esm.h
+source/sys_main.obj: C:/Users/ADMIN/workspace_v9/CC_2021_04x_v1/include/lin.h
+source/sys_main.obj: C:/Users/ADMIN/workspace_v9/CC_2021_04x_v1/include/reg_lin.h
 
 ../source/sys_main.c: 
 C:/Users/ADMIN/workspace_v9/CC_2021_04x_v1/include/FreeRTOS.h: 
@@ -91,3 +93,5 @@ C:/Users/ADMIN/workspace_v9/CC_2021_04x_v1/include/KaanSat_Lib/Commands.h:
 C:/Users/ADMIN/workspace_v9/CC_2021_04x_v1/include/KaanSat_Lib/PWM.h: 
 C:/Users/ADMIN/workspace_v9/CC_2021_04x_v1/include/esm.h: 
 C:/Users/ADMIN/workspace_v9/CC_2021_04x_v1/include/reg_esm.h: 
+C:/Users/ADMIN/workspace_v9/CC_2021_04x_v1/include/lin.h: 
+C:/Users/ADMIN/workspace_v9/CC_2021_04x_v1/include/reg_lin.h: 

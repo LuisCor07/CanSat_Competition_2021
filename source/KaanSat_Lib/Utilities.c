@@ -30,14 +30,12 @@ char command[COMM_SIZE] = {};
 char tramaAPI[COMM_SIZE] = {};
 uint32 buff_size = 0;
 uint32 buff_sizeAPI = 0;
+char FSW_STATE_TEMP = '9';
 
 char CMD_KEY[LONG_CMD_KEY] = {};
 
 /* ------------------- TELEMETRY -----------------------*/
                     /* CONTAINER */
-float MISSION_TIME = 0.0;
-char cMISSION_TIME[6];
-
 int PACKET_COUNT = 0;
 char cPACKET_COUNT[6] = "PC";
 
@@ -59,6 +57,8 @@ char cSP2_PC[6] = "P2";
 
 float ALTITUDE_BAR = 0.0;
 char cALTITUDE_BAR[8] = "h";
+
+float ALTITUDE_INIT = 0.0;
 
 float PRESS_BAR = 999999.0;
 char cPRESS_BAR[8] = "PR";
@@ -93,16 +93,21 @@ char SP2_ROTATION_RATE[LONG_SP_PARAM] = "X";
 /*---------------- COMMAND VARIABLES ----------------*/
 bool telemetry_ON = false;
 bool SP_ON = 0;
+bool SIM_ON = false;
 int ENABLE_SIM=0;
+int STATE_INDEX = 0;
+bool LAND = false;
 int H=0, M=0, S=0;
 char cH[3]="hhx", cM[3]="mmx", cS[3]="ssx";
 bool SP1X_ON = false;
 bool SP2X_ON = false;
 bool R1 = false;
 bool R2 = false;
+int sciControl = 0;
+bool toggle_sim = 0;
 /* ------------ TELEMETRY FORMAT -------------------*/
 //static const char* FORMAT = "1714,%s,C,%c,%c,%c,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s;1714,";
-static const char* CONT_FORMAT = "%s:%s:%s,%s,%s,%s,%s,%s,%s,%s,%s,%s;";
+static const char* FORMAT = "%s:%s:%s,%s,%s,%s,%s,%s,%s,%s,%s,%s;";
 
 /* ------------------ FUNCTIONS --------------------*/
 void createTelemetryPacket()
@@ -116,6 +121,9 @@ void createTelemetryPacket()
     ftoa(H, cH, 0);
     ftoa(M, cM, 0);
     ftoa(S, cS, 0);
+
+    ftoa(PRESS_BAR, cPRESS_BAR, 3);
+    ftoa(TEMPERATURE, cTEMPERATURE, 1);
 
     if(H<10)
     {
@@ -145,77 +153,78 @@ void createTelemetryPacket()
     char longAPI = 0x00;
 
     buff_size = sprintf(command,
-                        CONT_FORMAT,                     /* <TELEMETRY_FORMAT> */
-                        cH,cM,cS,                       /* <MISSION_TIME> */
+                        FORMAT,                     /* <TELEMETRY_FORMAT> */
+                        cH,cM,cS,                   /* <MISSION_TIME> */
                         cPACKET_COUNT,              /* <PACKET_COUNT> */
                         /* <PACKET_TYPE> */
-                        //MODE,                       /* <MODE> */
-                        //SP1_RELEASED,               /* <SP1_RELEASED> */
-                        //SP2_RELEASED,               /* <SP2_RELEASED> */
+//                        MODE,                       /* <MODE> */
+//                        SP1_RELEASED,               /* <SP1_RELEASED> */
+//                        SP2_RELEASED,               /* <SP2_RELEASED> */
                         cALTITUDE_BAR,              /* <ALTITUD> */
-                        //cTEMPERATURE,               /* <TEMP> */
+                        cTEMPERATURE,               /* <TEMP> */
                         /* <VOLTAGE> */
                         /* <GPS_TME> */
                         /* <GPS_LATITUDE> */
                         /* <GPS_LONGITUDE> */
                         /* <GPS_ALTITUDE> */
                         /* <GPS_SATS> */
-                        FSW_STATE[STATE],               /* <SOFTWARE_STATE> */
-                        //cSP1_PC,                        /* <SP1_PACKET_COUNT> */
-                        //cSP2_PC,                        /* <SP2_PACKET_COUNT> */
+                        FSW_STATE[STATE],           /* <SOFTWARE_STATE> */
+                        //cSP1_PC,                    /* <SP1_PACKET_COUNT> */
+                        //cSP2_PC,                    /* <SP2_PACKET_COUNT> */
                         /* <CMD_ECHO> */
-                        SP1_MISSION_TIME,               /* <MISSION_TIME> */
-                        SP1_PACKET_COUNT,               /* <PACKET_COUNT> */
-                        SP1_PACKET_TYPE,                /* <PACKET_TYPE> */
-                        SP1_ALTITUDE,                   /* <ALTITUD> */
-                        SP1_TEMPERATURE,                /* <TEMP> */
-                        SP1_ROTATION_RATE              /* <SP_ROTATION_RATE> */
-//                        SP2_MISSION_TIME,               /* <MISSION_TIME> */
-//                        SP2_PACKET_COUNT,               /* <PACKET_COUNT> */
-//                        SP2_PACKET_TYPE,                /* <PACKET_TYPE> */
-//                        SP2_ALTITUDE,                   /* <ALTITUD> */
-//                        SP2_TEMPERATURE,                /* <TEMP> */
-//                        SP2_ROTATION_RATE               /* <SP_ROTATION_RATE> */
+                        SP1_MISSION_TIME,           /* <MISSION_TIME> */
+                        SP1_PACKET_COUNT,           /* <PACKET_COUNT> */
+                        SP1_PACKET_TYPE,            /* <PACKET_TYPE> */
+                        SP1_ALTITUDE,               /* <ALTITUD> */
+                        SP1_TEMPERATURE,            /* <TEMP> */
+                        SP1_ROTATION_RATE           /* <SP_ROTATION_RATE> */
+//                        SP2_MISSION_TIME,           /* <MISSION_TIME> */
+//                        SP2_PACKET_COUNT,           /* <PACKET_COUNT> */
+//                        SP2_PACKET_TYPE,            /* <PACKET_TYPE> */
+//                        SP2_ALTITUDE,               /* <ALTITUD> */
+//                        SP2_TEMPERATURE,            /* <TEMP> */
+//                        SP2_ROTATION_RATE           /* <SP_ROTATION_RATE> */
                         );
-            longAPI = (char*)buff_size + 0x0E;          /* LONGITUD DE LA TRAMA     0E ES CONSTANTE */
 
-            preSum = 0x00;                              /* SUMA HEXADECIMAL DE CADA CARACTER */
+    longAPI = (char*)buff_size + 0x0E;          /* LONGITUD DE LA TRAMA     0E ES CONSTANTE */
 
-            for(i=0; i<buff_size; i++)                  //Caracteres de la trama
-            {
-                preSum = preSum + command[i];
-            }
+    preSum = 0x00;                              /* SUMA HEXADECIMAL DE CADA CARACTER */
 
-            /*Cheksum*/
-            Sum = 0x10 + (DH>>24) + ((DH>>16) & 0xFF) + ((DH>>8) & 0xFF) + (DH & 0xFF) + (DL_ET>>24) + ((DL_ET>>16) & 0xFF) + ((DL_ET>>8) & 0xFF) + (DL_ET & 0xFF) + 0xFF + 0xFE + preSum;
-            checksum = (0xFF - (Sum & 0xFF));
+    for(i=0; i<buff_size; i++)                  //Caracteres de la trama
+    {
+        preSum = preSum + command[i];
+    }
 
-            buff_sizeAPI = sprintf(tramaAPI,"%s",command);
+    /*Cheksum*/
+    Sum = 0x10 + (DH>>24) + ((DH>>16) & 0xFF) + ((DH>>8) & 0xFF) + (DH & 0xFF) + (DL_ET>>24) + ((DL_ET>>16) & 0xFF) + ((DL_ET>>8) & 0xFF) + (DL_ET & 0xFF) + 0xFF + 0xFE + preSum;
+    checksum = (0xFF - (Sum & 0xFF));
 
-//            buff_sizeAPI = sprintf(tramaAPI,"%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%s%c",
-//                                               0x7E,                    //1 Start Delimiter
-//                                               0x00,                    //2 Length
-//                                               longAPI,                 //3 Length
-//                                               0x10,                    //4 Frame type
-//                                               0x00,                    //5 Frame ID
-//                                               DH>>24,                  //6 Dest. Adress
-//                                               (DH>>16) & 0xFF,         //7 Dest. Adress
-//                                               (DH>>8) & 0xFF,          //8 Dest. Adress
-//                                               DH & 0xFF,               //9 Dest. Adress
-//                                               DL_ET>>24,               //10 Dest. Adress
-//                                               (DL_ET>>16) & 0xFF,      //11 Dest. Adress
-//                                               (DL_ET>>8) & 0xFF,       //12 Dest. Adress
-//                                               DL_ET & 0xFF,            //13 Dest. Adress
-//                                               0xFF,                    //14 Reserved
-//                                               0xFE,                    //15 Reserved
-//                                               0x00,                    //16 Broadcast radio
-//                                               0x00,                    //17 Cmd. Options
-//                                               command,                 //18 Message
-//                                               checksum);               //19 Checksum
+    buff_sizeAPI = sprintf(tramaAPI,"%s",command);
+
+//                                    //1 2 3 4 5 6 7 8 9 A B C D E F 1 2 3 4
+//    buff_sizeAPI = sprintf(tramaAPI,"%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%s%c",
+//                           0x7E,                    //1 Start Delimiter
+//                           0x00,                    //2 Length
+//                           longAPI,                 //3 Length
+//                           0x10,                    //4 Frame type
+//                           0x00,                    //5 Frame ID
+//                           DH>>24,                  //6 Dest. Adress
+//                           (DH>>16) & 0xFF,         //7 Dest. Adress
+//                           (DH>>8) & 0xFF,          //8 Dest. Adress
+//                           DH & 0xFF,               //9 Dest. Adress
+//                           DL_ET>>24,               //A Dest. Adress
+//                           (DL_ET>>16) & 0xFF,      //B Dest. Adress
+//                           (DL_ET>>8) & 0xFF,       //C Dest. Adress
+//                           DL_ET & 0xFF,            //D Dest. Adress
+//                           0xFF,                    //E Reserved
+//                           0xFE,                    //F Reserved
+//                           0x00,                    //1 Broadcast radio
+//                           0x00,                    //2 Cmd. Options
+//                           command,                 //3 Telemetry
+//                           checksum);               //4 Checksum
 
 }
 
-// 23:59:59
 void getTime()
 {
     if(S<60)
@@ -239,7 +248,107 @@ void getTime()
     }
 }
 
-float getAltitude(float P)
+void updateState(int State)
+{
+    switch(State)
+    {
+        case PRELAUNCH:
+            telemetry_ON = false;
+            STATE_INDEX = 0;
+            LAND = false;
+            SERVO_PAYLOAD.duty = SPOS_ZERO;
+            break;
+        case LAUNCH:
+            telemetry_ON = true;
+            LAND = false;
+            SERVO_PAYLOAD.duty = SPOS_ZERO;
+            break;
+        case DEPLOYMENT:
+            telemetry_ON = true;
+            LAND = true;
+            SERVO_PAYLOAD.duty = SPOS_ZERO;
+            break;
+        case SP1_RELEASE:
+            telemetry_ON = true;
+            LAND = true;
+            SERVO_PAYLOAD.duty = SPOS_SP1;
+            break;
+        case SP2_RELEASE:
+            telemetry_ON = true;
+            LAND= true;
+            SERVO_PAYLOAD.duty = SPOS_SP2;
+            break;
+        case LANDING:
+            telemetry_ON = false;
+            LAND = true;
+            SERVO_PAYLOAD.duty = SPOS_SP2;
+            break;
+    }
+}
+
+void updateAltitude (portTickType xSensorsTime, float presion_u[])
+{
+    int i=0;
+    float press_i=0, press_new=0, x=0, xT=0, var=0, desv=0, a=0, b=0;
+    if (toggle_sim==1)
+    {
+        toggle_sim=0;
+        for (i=0;i<=9;i++)
+        {
+            presion_u[i]= PRESS_BAR; //PRIMER ACOMODO DE PRESIONES
+            if (toggle_sim) break;
+            vTaskDelayUntil(&xSensorsTime, T_SENSORS);
+        }
+        if (!toggle_sim)
+        {
+            for (i=0;i<=9;i++)
+            {
+                press_i += presion_u[i];
+            }
+            press_i = press_i/(float)10;
+            ALTITUDE_INIT=getAltitude(press_i,25);
+        }
+    }
+    else
+    {
+        press_new = PRESS_BAR; //CAMBIO
+        for (i=0;i<10;i++)
+        {
+            x += presion_u [i]; //Media
+        }
+        xT = x/(float)10;
+
+        for (i=0;i<10;i++)
+        {
+            var += pow ((presion_u [i] - xT),2.00); //Varianza
+        }
+        desv= sqrt(var/9); //Desviación estándar
+
+        a = xT-3*desv; //Limite inf
+        b = xT+3*desv;  //Limite sup
+
+        if ((press_new<a)||(press_new>b))
+        {
+            /*m = presion_u[(*cont)] - presion_u[(*cont)-1];
+            n = presion_u[0] - presion_u[9];
+            if ((m<-2100)||(n<-2100))
+            {
+                ALTITUDE_BAR = getAltitude(PRESS_BAR);
+            }*/
+        }
+        else
+        {
+            ALTITUDE_BAR = getAltitude(PRESS_BAR,25);
+        }
+        for (i=0;i<9;i++)
+        {
+            presion_u[i]=presion_u[i+1];
+        }
+        presion_u[9]=press_new;
+    }
+}
+
+float getAltitude(float P, float T)
 {
     return (Rair*(T+273.15)*log(P0/P))/ug;
 }
@@ -298,4 +407,3 @@ void ftoa(float n, char *res, int afterpoint)
         sltoa(&res[i+1], abs(fpart) );
     }
 }
-

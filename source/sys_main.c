@@ -143,6 +143,7 @@ void vTelemetry(void *pvParameters)
             __delay_cycles(106);
         }
 
+        getTime();
         createTelemetryPacket();
         //TODO V4
         sciSendData(buff_sizeAPI, tramaAPI, 0);
